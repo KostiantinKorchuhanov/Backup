@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 class BackupCreator:
     def __init__(self):
-        self.data_file = "data.json"
+        self.data_file = os.path.join("database", "data.json")
 
     def create_backup(self, file_path, store_time, time_index):
         backup_dir = Path.home() / ".cache" / "conf-backup"
@@ -19,7 +19,7 @@ class BackupCreator:
         backup_path = backup_dir / backup_file_name
 
         if not os.path.exists(file_path):
-            raise FileNotFoundError
+            raise FileNotFoundError(f"There is no such file on a given path")
 
         if time_index == "h":
             delta = timedelta(hours=store_time)
@@ -38,23 +38,24 @@ class BackupCreator:
         expire_date = now_time + delta
 
         new_data = {
-            "original_path": file_path,
-            "backup_path": backup_path,
-            "file_name": file_name,
-            "expire_time": expire_date.isoformat(),
-            "timestamp": int(time.time())
+            "Original path": file_path,
+            "Backup path": str(backup_path),
+            "File name": file_name,
+            "Expire time": expire_date.isoformat(),
+            "ID": int(time.time())
         }
 
-        if os.path.exists(self.data_file):
-            with open(self.data_file, "r", encoding="utf-8") as f:
-                try:
-                    data = json.load(f)
-                    if not isinstance(data, list):
-                        data = []
-                except json.JSONDecodeError:
+        if not os.path.exists(self.data_file):
+            with open(self.data_file, "w", encoding="utf-8") as f:
+                json.dump([], f)
+
+        with open(self.data_file, "r", encoding="utf-8") as f:
+            try:
+                data = json.load(f)
+                if not isinstance(data, list):
                     data = []
-        else:
-            data = []
+            except json.JSONDecodeError:
+                data = []
 
         data.append(new_data)
 

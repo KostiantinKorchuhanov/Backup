@@ -1,0 +1,26 @@
+from core.backup import BackupCreator
+from core.restore import RestoreFile
+from core.cleaner import ClearByTime
+from core.list import ShowData
+import argparse
+
+ClearByTime().check_clean()
+
+parser = argparse.ArgumentParser(description="Safe config backup and restore utility")
+parser.add_argument('-b', '--backup', help="Path for file to create a backup")
+parser.add_argument('-r', '--rollback',type=int, help="ID of the backup to restore")
+parser.add_argument('-t', '--time', type=int, default=1, help="Time for storing the backup")
+parser.add_argument('-k', '--keep', choices=['h', 'd'], default='d', help="Time index: -h for hours, -d for days")
+parser.add_argument('-s', '--show', action='store_true', help="Shows info about copied files")
+
+args = parser.parse_args()
+
+if args.backup:
+    BackupCreator().create_backup(args.backup, args.time, args.keep)
+
+if args.rollback:
+    RestoreFile().restore_file(args.rollback)
+
+if args.show:
+    ShowData().show_data()
+
