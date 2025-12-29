@@ -19,6 +19,23 @@ class ItemsWindow:
         RestoreFile().restore_file(id)
         self.refresh_items()
 
+    def delete_pressed(self, path):
+        if os.path.exists(path):
+            os.remove(path)
+
+        with open(self.data_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        new_data = []
+        for item in data:
+            if item["Backup path"] != path:
+                new_data.append(item)
+
+        with open(self.data_file, "w", encoding="utf-8") as f:
+            json.dump(new_data, f, indent=4)
+
+        self.refresh_items()
+
     def refresh_items(self):
         ClearByTime().check_clean()
         for widget in self.scrollable_frame.winfo_children():
@@ -33,23 +50,25 @@ class ItemsWindow:
             frame_item = customtkinter.CTkFrame(self.scrollable_frame, border_width=1)
             frame_item.pack(side="top", fill="x", padx=2, pady=(2, 0))
 
-            textbox = customtkinter.CTkTextbox(frame_item, height=100, width=500)
+            textbox = customtkinter.CTkTextbox(frame_item, height=100, width=580)
             if item["File name"]:
-                file_name = f"File name: {str(item["File name"])}"
+                file_name_text = f"File name: {str(item["File name"])}"
             if item["Original path"]:
-                original_path = f"Original path: {str(item["Original path"])}"
+                original_path_text = f"Original path: {str(item["Original path"])}"
             if item["Expire time"]:
                 expire_time_isoformat = item["Expire time"]
                 expire_time_converted = datetime.fromisoformat(expire_time_isoformat)
                 expire_time = expire_time_converted.strftime("%d.%m.%Y at %H:%M:%S")
                 expire_result = f"Expire time: {expire_time}"
-            textbox.insert("end", file_name + "\n", "font_1")
+            textbox.insert("end", file_name_text + "\n", "font_1")
             textbox.insert("end", expire_result + "\n", "font_1")
-            textbox.insert("end", original_path, "font_2")
+            textbox.insert("end", original_path_text, "font_2")
             textbox.tag_config("font_1", cnf={"font": self.font_1})
             textbox.tag_config("font_2", cnf={"font": self.font_2})
             textbox.pack(side="left", padx=3, pady=(3, 3))
             textbox.configure(state="disabled")
+
+            backup_path = item["Backup path"]
 
             icon_restore_path_dark = os.path.join(self.current_dir, "image", "undo_dark.png")
             icon_restore_path_light = os.path.join(self.current_dir, "image", "undo_light.png")
@@ -59,7 +78,21 @@ class ItemsWindow:
                 size=(35, 35)
             )
             id = item["ID"]
-            restore_button = customtkinter.CTkButton(frame_item, image=icon_restore, text="",
-                                                         command=lambda file_id=id: self.restore_pressed(file_id),
-                                                         fg_color="gray", height=45, width=45)
-            restore_button.pack(side="top", anchor="nw", padx=5, pady=5)
+            restore_button = customtkinter.CTkButton(
+                frame_item, image=icon_restore, text="",
+                command=lambda file_id=id: self.restore_pressed(file_id),
+                fg_color="gray", height=45, width=45)
+            restore_button.pack(side="top", anchor="nw", padx=10, pady=(10, 5))
+
+            icon_delete_path_dark = os.path.join(self.current_dir, "image", "delete_dark.png")
+            icon_delete_path_light = os.path.join(self.current_dir, "image", "delete_light.png")
+            icon_delete = customtkinter.CTkImage(
+                light_image=Image.open(icon_delete_path_light),
+                dark_image=Image.open(icon_delete_path_dark),
+                size=(35, 35)
+            )
+            delete = customtkinter.CTkButton(
+                frame_item, image=icon_delete, text="",
+                command=lambda path=backup_path: self.delete_pressed(path),
+                width=40, fg_color="gray")
+            delete.pack(side="top", anchor="nw", padx=10, pady=(5, 10))
