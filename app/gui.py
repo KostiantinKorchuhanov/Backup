@@ -6,12 +6,14 @@ from app.widgets.create_backup_widget import BackupWindow
 from customtkinter import CTkFont
 from app.widgets.create_items_widget import ItemsWindow
 from app.widgets.create_settings_widget import SettingsWindow
+from app.logging_config import setup_logging
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 data_file = os.path.join("database", "data.json")
 top_level_add = None
 
 def main():
+    setup_logging()
     global app, scrollable_frame, font_1, font_2
 
     with shelve.open("settings") as db:

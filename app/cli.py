@@ -2,8 +2,11 @@ from core.backup import BackupCreator
 from core.restore import RestoreFile
 from core.cleaner import ClearByTime
 from core.list import ShowData
+from app.logging_config import setup_logging
 import argparse
 
+
+setup_logging()
 ClearByTime().check_clean()
 
 parser = argparse.ArgumentParser(description="Safe config backup and restore utility")
