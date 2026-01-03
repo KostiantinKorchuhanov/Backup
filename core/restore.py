@@ -1,7 +1,8 @@
-import json
 import shutil
 import os
 import logging
+
+from core.utils import read_json_file, write_json_file
 
 logger = logging.getLogger(__name__)
 
@@ -12,8 +13,7 @@ class RestoreFile:
     def restore_file(self, asked_id):
         logger.info("Restoring file started")
         logger.info("Restore requested for ID=%s", asked_id)
-        with open(self.data_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        data = read_json_file(self.data_file)
 
         found_block = None
         for item in data:
@@ -24,7 +24,7 @@ class RestoreFile:
 
         if not found_block:
             logger.info("BAD restore requested for ID=%s - check if file exists", asked_id)
-            raise ValueError(f"No such file in the backup storage")
+            raise ValueError("No such file in the backup storage")
 
         original_path = found_block.get("Original path")
         backup_path = found_block.get("Backup path")
@@ -46,10 +46,9 @@ class RestoreFile:
                     new_data.append(item)
                 else:
                     continue
-            with open(self.data_file, "w", encoding="utf-8") as f:
-                json.dump(new_data, f, ensure_ascii=False, indent=4)
+            write_json_file(self.data_file, new_data)
         except Exception as e:
-            logger.exception(f"Error during database changes {e}")
+            logger.exception("Error during database changes %s", e)
             raise
 
         logger.info("Finished restoring file")

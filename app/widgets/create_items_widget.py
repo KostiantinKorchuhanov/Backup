@@ -3,8 +3,9 @@ import os
 from PIL import Image
 from core.cleaner import ClearByTime
 from core.restore import RestoreFile
-import json
 from datetime import datetime
+
+from core.utils import read_json_file, write_json_file
 
 
 class ItemsWindow:
@@ -23,16 +24,14 @@ class ItemsWindow:
         if os.path.exists(path):
             os.remove(path)
 
-        with open(self.data_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        data = read_json_file(self.data_file)
 
         new_data = []
         for item in data:
             if item["Backup path"] != path:
                 new_data.append(item)
 
-        with open(self.data_file, "w", encoding="utf-8") as f:
-            json.dump(new_data, f, indent=4)
+        write_json_file(self.data_file, new_data)
 
         self.refresh_items()
 
@@ -43,8 +42,7 @@ class ItemsWindow:
         self.create_items()
 
     def create_items(self):
-        with open(self.data_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        data = read_json_file(self.data_file)
 
         for item in data:
             frame_item = customtkinter.CTkFrame(self.scrollable_frame, border_width=1)

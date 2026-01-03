@@ -1,10 +1,11 @@
 import os
-import json
 import shutil
 from pathlib import Path
 import time
 from datetime import datetime, timedelta
 import logging
+
+from core.utils import read_json_file, write_json_file
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,10 @@ class BackupCreator:
             logger.error("File not found: %s", file_path)
             raise FileNotFoundError(f"There is no such file on a given path {file_path}")
 
+        if not os.path.isfile(file_path):
+            logger.error("This is not a file: %s", file_path)
+            raise FileNotFoundError(f"Only files can be backed up, not directories: {file_path}")
+
         if store_time <= 0:
             logger.error("Invalid store_time: %s", store_time)
             raise ValueError("store_time must be a positive number")
@@ -41,7 +46,7 @@ class BackupCreator:
             shutil.copy2(file_path, backup_path)
         except Exception as e:
             logger.exception("Error during copying file")
-            raise RuntimeError("Backup failed")
+            raise RuntimeError("Backup failed") from e
 
         now_time = datetime.now()
         expire_date = now_time + delta
@@ -53,23 +58,7 @@ class BackupCreator:
             "Expire time": expire_date.isoformat(),
             "ID": int(time.time())
         }
-
-        if not os.path.exists(self.data_file):
-            logger.warning("No database was found - created a new one")
-            with open(self.data_file, "w", encoding="utf-8") as f:
-                json.dump([], f)
-
-        with open(self.data_file, "r", encoding="utf-8") as f:
-            try:
-                data = json.load(f)
-                if not isinstance(data, list):
-                    data = []
-            except json.JSONDecodeError:
-                data = []
-
+        data = read_json_file(self.data_file)
         data.append(new_data)
-
-        with open(self.data_file, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-
+        write_json_file(self.data_file, data)
         logger.info("Backup created successfully")

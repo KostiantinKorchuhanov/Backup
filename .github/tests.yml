@@ -1,0 +1,26 @@
+name: Tests
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        test:
+          - tests/test_backup.py
+          - tests/test_cleaner.py
+          - tests/test_list.py
+          - tests/test_restore.py
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install pytest pytest-cov
+      - run: pytest ${{ matrix.test }} --cov=core --cov-report=term
+        env:
+          PYTHONPATH: .
+

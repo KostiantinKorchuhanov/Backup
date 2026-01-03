@@ -32,7 +32,7 @@ class BackupWindow:
             time_valid = False
 
         path_value = self.entry_path.get().strip()
-        if path_value != "" and os.path.exists(path_value):
+        if path_value != "" and os.path.exists(path_value) and os.path.isfile(path_value):
             self.entry_path.configure(fg_color="gray")
             path_valid = True
         else:

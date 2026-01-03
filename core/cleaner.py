@@ -3,6 +3,8 @@ import os
 from datetime import datetime
 import logging
 
+from core.utils import read_json_file, write_json_file
+
 logger = logging.getLogger(__name__)
 
 class ClearByTime:
@@ -11,18 +13,7 @@ class ClearByTime:
 
     def check_clean(self):
         logger.info("Cleaner started")
-        if not os.path.exists(self.data_file):
-            logger.warning("No database found")
-            data = []
-        else:
-            with open(self.data_file, "r", encoding="utf-8") as f:
-                try:
-                    data = json.load(f)
-                    if not isinstance(data, list):
-                        data = []
-                except json.JSONDecodeError:
-                    logger.error("Database file is corrupted, resetting")
-                    data = []
+        data = read_json_file(self.data_file)
 
         now_time = datetime.now()
 
@@ -44,7 +35,6 @@ class ClearByTime:
                     except Exception:
                         logger.exception("Error removing backup: %s", backup_path)
 
-        with open(self.data_file, "w", encoding="utf-8") as f:
-            json.dump(new_data, f, ensure_ascii=False, indent=4)
+        write_json_file(self.data_file, new_data)
 
         logger.info("Cleaner ended")

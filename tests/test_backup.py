@@ -4,20 +4,24 @@ from core.backup import BackupCreator
 import os
 import json
 
-def test_create_backup_file_successfully(tmp_path):
+def test_create_backup_file_successfully(tmp_path, monkeypatch):
     data_file = tmp_path / "data.json"
     test_file = tmp_path / "test.txt"
     test_file.write_text("Arch Linux")
     backup = BackupCreator(data_file=str(data_file))
 
+    backup_dir = tmp_path / "backup"
+    backup_dir.mkdir()
+    monkeypatch.setattr("pathlib.Path.home", lambda: tmp_path)
+
     backup.create_backup(file_path=str(test_file), store_time=1, time_index="h")
 
     assert data_file.exists()
 
-    with open(data_file, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    from core.utils import read_json_file
+    data = read_json_file(data_file)
     assert len(data) == 1
-    item=data[0]
+    item = data[0]
 
     assert item["Original path"] == str(test_file)
     assert item["File name"] == "test.txt"
