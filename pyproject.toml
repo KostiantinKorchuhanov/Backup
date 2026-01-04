@@ -24,4 +24,5 @@ dependencies = [
 bt = "app.cli:main"
 bt-gui = "app.gui:main"
 
-
+[tool.setuptools.packages.find]
+where = ["."]
