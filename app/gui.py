@@ -1,3 +1,4 @@
+import json
 import shelve
 import customtkinter
 from PIL import Image
@@ -13,7 +14,13 @@ data_file = os.path.join("database", "data.json")
 top_level_add = None
 
 def main():
+    if not os.path.exists("database"):
+        os.mkdir("database")
+
+    with open(data_file, "w") as f:
+        json.dump([], f)
     setup_logging()
+
     global app, scrollable_frame, font_1, font_2
 
     with shelve.open("settings") as db:

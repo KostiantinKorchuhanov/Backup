@@ -1,3 +1,5 @@
+import json
+import os.path
 from core.backup import BackupCreator
 from core.restore import RestoreFile
 from core.cleaner import ClearByTime
@@ -6,6 +8,12 @@ from app.logging_config import setup_logging
 import argparse
 
 def main():
+    if not os.path.exists("database"):
+        os.mkdir("database")
+
+    data_file = os.path.join("database", "data.json")
+    with open(data_file, "w") as f:
+        json.dump([], f)
 
     setup_logging()
     ClearByTime().check_clean()
