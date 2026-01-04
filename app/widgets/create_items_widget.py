@@ -87,7 +87,7 @@ class ItemsWindow:
             restore_button = customtkinter.CTkButton(
                 frame_item, image=icon_restore, text="",
                 command=lambda file_id=id: self.restore_pressed(file_id),
-                fg_color="gray", height=45, width=45)
+                height=45, width=45)
             restore_button.pack(side="top", anchor="nw", padx=10, pady=(10, 5))
 
             icon_delete_path_dark = os.path.join(self.current_dir, "image", "delete_dark.png")
@@ -100,5 +100,5 @@ class ItemsWindow:
             delete = customtkinter.CTkButton(
                 frame_item, image=icon_delete, text="",
                 command=lambda path=backup_path: self.delete_pressed(path),
-                width=40, fg_color="gray")
+                width=40)
             delete.pack(side="top", anchor="nw", padx=10, pady=(5, 10))

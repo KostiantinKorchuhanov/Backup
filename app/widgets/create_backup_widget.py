@@ -80,5 +80,5 @@ class BackupWindow:
                                                      width=100, height=50, state="disabled")
         self.create_button.pack(side="right")
         cancel_button = customtkinter.CTkButton(button_frame, text="Cancel", command=self.cancel_backup_button,
-                                                width=100, height=50, fg_color="gray")
+                                                width=100, height=50)
         cancel_button.pack(side="left")

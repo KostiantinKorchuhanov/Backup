@@ -30,10 +30,10 @@ class WarningWindow:
 
         self.top_level_warning = customtkinter.CTkToplevel(self.master)
         self.top_level_warning.title("Warning")
-        self.top_level_warning.geometry("300x150")
+        self.top_level_warning.geometry("320x150")
         self.top_level_warning.resizable(False, False)
 
-        label = customtkinter.CTkLabel(self.top_level_warning, text=self.text, font=CTkFont("Inter", 20), wraplength=300, justify="center", anchor="center")
+        label = customtkinter.CTkLabel(self.top_level_warning, text=self.text, font=CTkFont("Inter", 20), wraplength=280, justify="center", anchor="center")
         label.pack(side="top", padx=10, pady=10)
         frame = customtkinter.CTkFrame(self.top_level_warning)
         frame.pack(side="bottom", fill="x", padx=10, pady=10)

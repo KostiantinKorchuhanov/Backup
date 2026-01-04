@@ -61,7 +61,7 @@ def main():
         size=(35, 35)
     )
     settings_pressed = SettingsWindow(app)
-    settings = customtkinter.CTkButton(panel, image=icon_settings, text="", command=settings_pressed.create_settings, width=40, fg_color="gray")
+    settings = customtkinter.CTkButton(panel, image=icon_settings, text="", command=settings_pressed.create_settings, width=40)
     settings.pack(side="right", padx=10, pady=5)
 
     icon_add_path_light = os.path.join(current_dir, "image", "add_light.png")
@@ -71,7 +71,7 @@ def main():
         dark_image=Image.open(icon_add_path_dark),
         size=(35, 35)
     )
-    add = customtkinter.CTkButton(panel, image=icon_add, text="", command=BackupWindow(app, font_1).create_backup, width=40, fg_color="gray")
+    add = customtkinter.CTkButton(panel, image=icon_add, text="", command=BackupWindow(app, font_1).create_backup, width=40)
     add.pack(side="left", padx=10, pady=10)
 
     icon_reload_path_dark = os.path.join(current_dir, "image", "reload_dark.png")
@@ -80,7 +80,7 @@ def main():
         dark_image=Image.open(icon_reload_path_dark),
         size=(35, 35)
     )
-    reload = customtkinter.CTkButton(panel, image=icon_reload, text="", command=items_window.refresh_items, width=40, fg_color="gray")
+    reload = customtkinter.CTkButton(panel, image=icon_reload, text="", command=items_window.refresh_items, width=40)
     reload.pack(side="left", padx=10, pady=10)
 
     items_window.create_items()
