@@ -41,7 +41,8 @@ def main():
         data_file=data_file,
         font_1=font_1,
         font_2=font_2,
-        current_dir=current_dir
+        current_dir=current_dir,
+        master=app
     )
 
     icon_settings_path_light = os.path.join(current_dir, "image", "settings_light.png")

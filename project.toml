@@ -1,0 +1,27 @@
+[owner]
+name = "Kostiantyn Korchuhanov"
+
+[build-system]
+requires = ["setuptools>=65.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "backtrack"
+version = "1.0"
+description = "Safe and comfortable backup creator"
+authors = [
+    { name = "Kostiantyn Korchuhanov", email = "kostiantyn.korchanov@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "customtkinter",
+    "pillow",
+    "pytest",
+    "pytest-cov"
+]
+
+[project.scripts]
+bt = "app.cli:main"
+bt-gui = "app.gui:main"
+
+

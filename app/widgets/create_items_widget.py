@@ -1,3 +1,5 @@
+from doctest import master
+
 import customtkinter
 import os
 from PIL import Image
@@ -6,33 +8,39 @@ from core.restore import RestoreFile
 from datetime import datetime
 
 from core.utils import read_json_file, write_json_file
+from app.widgets.crate_warning_widget import WarningWindow
 
 
 class ItemsWindow:
-    def __init__(self, scrollable_frame, data_file, font_1, font_2, current_dir):
+    def __init__(self, scrollable_frame, data_file, font_1, font_2, current_dir, master):
         self.scrollable_frame = scrollable_frame
         self.data_file = data_file
         self.font_1 = font_1
         self.font_2 = font_2
         self.current_dir = current_dir
+        self.master = master
+        self.warning = WarningWindow(
+            self.master
+        )
 
     def restore_pressed(self, id):
+        if self.warning.create_warning(text="You sure you want to RESTORE this backup?") is False:
+            return
         RestoreFile().restore_file(id)
         self.refresh_items()
 
     def delete_pressed(self, path):
+        if self.warning.create_warning(text="You sure you want to DELETE this backup?") is False:
+            return
+
         if os.path.exists(path):
             os.remove(path)
-
         data = read_json_file(self.data_file)
-
         new_data = []
         for item in data:
             if item["Backup path"] != path:
                 new_data.append(item)
-
         write_json_file(self.data_file, new_data)
-
         self.refresh_items()
 
     def refresh_items(self):
