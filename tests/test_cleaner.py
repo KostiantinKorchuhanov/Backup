@@ -1,16 +1,14 @@
 import pytest
 import json
-from core.backup import BackupCreator
 from datetime import datetime,timedelta
 from core.cleaner import ClearByTime
-import os
 
 
 @pytest.fixture
 def test_data(tmp_path):
     data_file = tmp_path / "data.json"
     test_file = tmp_path / "test.bak"
-    test_file.write_text("Arch Linux")
+    test_file.write_text("Something")
 
     data = [
         {
@@ -35,7 +33,7 @@ def test_remove_expired_data_file(test_data):
 def test_remove_not_expired_data_file(tmp_path):
     data_file = tmp_path / "data.json"
     test_file = tmp_path / "test.bak"
-    test_file.write_text("Arch Linux")
+    test_file.write_text("Something")
     data = [
         {
             "Backup path": str(test_file),

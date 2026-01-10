@@ -1,8 +1,6 @@
 import pytest
 import json
 from core.list import ShowData
-from datetime import datetime
-import time
 
 
 @pytest.fixture

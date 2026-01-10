@@ -6,8 +6,8 @@ def test_restore_file_successfully(tmp_path, monkeypatch):
     data_file = tmp_path / "data.json"
     backup_file = tmp_path / "backup.txt"
     original_file = tmp_path / "original.txt"
-    backup_file.write_text("Arch Linux")
-    original_file.write_text("Manjaro Linux")
+    backup_file.write_text("Something")
+    original_file.write_text("NOT Something")
 
     data = [
         {
@@ -21,7 +21,7 @@ def test_restore_file_successfully(tmp_path, monkeypatch):
     monkeypatch.setattr(restore, "data_file", str(data_file))
     restore.restore_file(314159265)
 
-    assert original_file.read_text() == "Arch Linux"
+    assert original_file.read_text() == "Something"
     assert not backup_file.exists()
 
     updated_data = json.loads(data_file.read_text())

@@ -1,13 +1,12 @@
 from pathlib import Path
 import pytest
 from core.backup import BackupCreator
-import os
-import json
+from core.utils import read_json_file
 
 def test_create_backup_file_successfully(tmp_path, monkeypatch):
     data_file = tmp_path / "data.json"
     test_file = tmp_path / "test.txt"
-    test_file.write_text("Arch Linux")
+    test_file.write_text("Something")
     backup = BackupCreator(data_file=str(data_file))
 
     backup_dir = tmp_path / "backup"
@@ -18,7 +17,6 @@ def test_create_backup_file_successfully(tmp_path, monkeypatch):
 
     assert data_file.exists()
 
-    from core.utils import read_json_file
     data = read_json_file(data_file)
     assert len(data) == 1
     item = data[0]
@@ -39,7 +37,7 @@ def test_file_not_found(tmp_path):
 
 def test_invalid_storage_time(tmp_path):
     test_file = tmp_path / "test.txt"
-    test_file.write_text("Arch Linux")
+    test_file.write_text("Something")
     backup = BackupCreator(data_file=str(tmp_path / "data.json"))
     with pytest.raises(ValueError):
         backup.create_backup(file_path=str(test_file), store_time=0, time_index="h")
@@ -47,7 +45,7 @@ def test_invalid_storage_time(tmp_path):
 
 def test_invalid_time_index(tmp_path):
     test_file = tmp_path / "test.txt"
-    test_file.write_text("Arch Linux")
+    test_file.write_text("Something")
     backup = BackupCreator(data_file=str(tmp_path / "data.json"))
     with pytest.raises(ValueError):
         backup.create_backup(file_path=str(test_file), store_time=1, time_index="a")
