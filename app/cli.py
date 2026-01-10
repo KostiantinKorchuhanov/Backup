@@ -65,17 +65,22 @@ def main():
         file_path = args.file
         editor = args.editor
 
-        if not os.path.isfile(file_path):
-            parser.error("File does not exist")
-
         if not shutil.which(editor):
             parser.error("Editor not found")
+
+        if editor in ("kate",):
+            editor += " -b"
+        elif editor in ("gedit", "code", "codium"):
+            editor += " --wait"
+
+        if not os.path.isfile(file_path):
+            parser.error("File does not exist")
 
         hash_before = file_hash(file_path)
         backup = TemporaryBackup(file_path)
         backup.create()
         try:
-            subprocess.run([editor, file_path], check=False)
+            subprocess.run(editor.split() + [file_path], check=False)
         except KeyboardInterrupt:
             backup.restore()
             backup.clean()
