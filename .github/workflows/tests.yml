@@ -12,6 +12,7 @@ jobs:
           - tests/test_cleaner.py
           - tests/test_list.py
           - tests/test_restore.py
+          - tests/test_temp_backup.py
 
     steps:
       - uses: actions/checkout@v4
