@@ -19,14 +19,6 @@ def file_hash(file_path):
     return file.hexdigest()
 
 def main():
-    if not os.path.exists("database"):
-        os.mkdir("database")
-
-    data_file = os.path.join("database", "data.json")
-    if not os.path.exists(data_file):
-        with open(data_file, "w") as f:
-            json.dump([], f)
-
     setup_logging()
     ClearByTime().check_clean()
 
