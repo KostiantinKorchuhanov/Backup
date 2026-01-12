@@ -15,6 +15,13 @@ It supports both CLI and GUI, providing temporary and permanent backups, file ro
 - Works with any text file and configuration file
 
 ---
+## Third-party assets
+Source code is licensed under the GNU GPL v3.0.
+
+**Icons are provided by Icons8 (https://icons8.com) and are licensed separately.
+Icons are NOT covered by the GPL and may not be used, copied, or redistributed
+except in accordance with the Icons8 license.**
+---
 
 ## Requirements
 
